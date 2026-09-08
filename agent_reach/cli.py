@@ -93,7 +93,7 @@ def main():
     p_install.add_argument("--channels", default="",
                            help="Comma-separated optional channels to install "
                                 "(twitter,xiaoyuzhou,xueqiu,xiaohongshu,"
-                                "reddit,facebook,instagram,bilibili,linkedin,all)")
+                                "reddit,facebook,instagram,bilibili,douyin,wechat,zhihu,linkedin,all)")
 
     # ── configure ──
     p_conf = sub.add_parser("configure", help="Set a config value or auto-extract from browser")
@@ -269,6 +269,9 @@ def _cmd_install(args):
         "reddit":      _install_reddit_deps,
         "facebook":    _install_opencli_deps,
         "instagram":   _install_opencli_deps,
+        "douyin":      _install_opencli_deps,
+        "wechat":      _install_opencli_deps,
+        "zhihu":       _install_opencli_deps,
         "bilibili":    _install_bili_deps,
         "opencli":     _install_opencli_deps,  # cross-channel backend, desktop only
         # xueqiu: cookie-only, no install step
@@ -279,6 +282,10 @@ def _cmd_install(args):
         channel.strip().lower()
         for channel in args.channels.split(",")
         if channel.strip()
+    ]
+    raw_channels = [
+        "wechat" if channel in {"weixin", "wechat-official"} else channel
+        for channel in raw_channels
     ]
     unknown_channels = set(raw_channels) - supported_channels - {"all"}
     if unknown_channels:
@@ -313,7 +320,7 @@ def _cmd_install(args):
         tools_dir = os.path.expanduser("~/.agent-reach/tools")
         os.makedirs(tools_dir, exist_ok=True)
 
-    OPENCLI_ONLY_CHANNELS = {"opencli", "facebook", "instagram"}
+    OPENCLI_ONLY_CHANNELS = {"opencli", "facebook", "instagram", "douyin", "wechat", "zhihu"}
     COOKIE_CHANNELS = {"twitter", "xueqiu", "bilibili", "xiaohongshu"}
 
     # Auto-detect environment
@@ -451,13 +458,13 @@ def _cmd_install(args):
                 # First install — hint about optional channels
                 print()
                 print("More channels available! Use --channels to install:")
-                print("   agent-reach install --system --channels=twitter,xiaohongshu,reddit,facebook,instagram,...")
+                print("   agent-reach install --system --channels=twitter,xiaohongshu,reddit,facebook,instagram,douyin,wechat,zhihu,...")
                 print("   agent-reach install --system --channels=all  (install everything)")
 
             # Star reminder
             print()
             print("如果 Agent Reach 帮到了你，给个 Star 让更多人发现它吧：")
-            print("   https://github.com/Panniantong/Agent-Reach")
+            print("   https://github.com/LeonidsChan/Agent-Reach")
             print("   只需一秒，对独立开发者意义很大。谢谢！")
             if not install_ok:
                 raise SystemExit(1)
@@ -2194,9 +2201,9 @@ def _github_get_with_retry(url, timeout=10, retries=3, sleeper=time.sleep):
 #: agent through all three (docs/update.md); bare pip only updates the package.
 _UPDATE_INSTRUCTIONS = (
     "更新方式（推荐，复制这句话给你的 AI Agent，会完整更新本体+上游工具+skill）：\n"
-    "  帮我更新 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/update.md\n"
+    "  帮我更新 Agent Reach：https://raw.githubusercontent.com/LeonidsChan/Agent-Reach/main/docs/update.md\n"
     "仅更新本体（不含上游工具和 skill）：\n"
-    "  pip install --upgrade https://github.com/Panniantong/agent-reach/archive/main.zip"
+    "  pip install --upgrade https://github.com/LeonidsChan/Agent-Reach/archive/main.zip"
 )
 
 
@@ -2209,7 +2216,8 @@ def _is_newer_version(remote: str, local: str) -> bool:
     """
     def parse(v):
         try:
-            return tuple(int(x) for x in v.strip().split("."))
+            release = v.strip().split("+", 1)[0]
+            return tuple(int(x) for x in release.split("."))
         except ValueError:
             return None
 
@@ -2224,8 +2232,8 @@ def _cmd_check_update():
     from agent_reach import __version__
 
     print(f"当前版本: v{__version__}")
-    release_url = "https://api.github.com/repos/Panniantong/Agent-Reach/releases/latest"
-    commit_url = "https://api.github.com/repos/Panniantong/Agent-Reach/commits/main"
+    release_url = "https://api.github.com/repos/LeonidsChan/Agent-Reach/releases/latest"
+    commit_url = "https://api.github.com/repos/LeonidsChan/Agent-Reach/commits/main"
 
     # Fetch latest release with retry/backoff.
     resp, err, attempts = _github_get_with_retry(release_url, timeout=10, retries=3)
@@ -2310,7 +2318,7 @@ def _cmd_watch():
     new_version = ""
     release_body = ""
     resp, err, _attempts = _github_get_with_retry(
-        "https://api.github.com/repos/Panniantong/Agent-Reach/releases/latest",
+        "https://api.github.com/repos/LeonidsChan/Agent-Reach/releases/latest",
         timeout=10,
         retries=2,
     )
@@ -2343,7 +2351,7 @@ def _cmd_watch():
             for line in release_body.strip().split("\n")[:10]:
                 print(f"    {line}")
         print("  更新（一句话发给 Agent 即可完整更新）：")
-        print("    帮我更新 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/update.md")
+        print("    帮我更新 Agent Reach：https://raw.githubusercontent.com/LeonidsChan/Agent-Reach/main/docs/update.md")
 
 
 if __name__ == "__main__":

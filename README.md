@@ -10,13 +10,13 @@
 
 <p align="center">
   <a href="https://trendshift.io/repositories/24387"><img src="https://trendshift.io/api/badge/repositories/24387" alt="Trendshift GitHub Trending #1 Repository of the Day"></a>
-  <a href="https://star-history.com/#Panniantong/Agent-Reach&Date"><img src="https://api.star-history.com/badge?repo=Panniantong/Agent-Reach" alt="Star History Rank" width="196" height="55"></a>
+  <a href="https://star-history.com/#LeonidsChan/Agent-Reach&Date"><img src="https://api.star-history.com/badge?repo=LeonidsChan/Agent-Reach" alt="Star History Rank" width="196" height="55"></a>
 </p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10+-green.svg?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+"></a>
-  <a href="https://github.com/Panniantong/agent-reach/stargazers"><img src="https://img.shields.io/github/stars/Panniantong/agent-reach?style=for-the-badge" alt="GitHub Stars"></a>
+  <a href="https://github.com/LeonidsChan/Agent-Reach/stargazers"><img src="https://img.shields.io/github/stars/LeonidsChan/Agent-Reach?style=for-the-badge" alt="GitHub Stars"></a>
 </p>
 
 <p align="center">
@@ -24,6 +24,10 @@
 </p>
 
 ---
+
+> 这是面向 LeonidsChan 多机环境维护的本地化 fork，持续跟进
+> [Panniantong/Agent-Reach](https://github.com/Panniantong/Agent-Reach) 上游，并额外保留
+> 微信公众号、抖音、知乎以及本机验证过的检索回退路径。
 
 ## ❤️赞助商
 
@@ -76,7 +80,7 @@ AI Agent 已经能帮你写代码、改文档、管项目——但你让它去�
 **Agent Reach 把这件事变成一句话：**
 
 ```
-帮我安装 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/install.md
+帮我安装 Agent Reach：https://raw.githubusercontent.com/LeonidsChan/Agent-Reach/main/docs/install.md
 ```
 
 复制给你的 Agent，几分钟后它就能读推特、搜 Reddit、看 YouTube、刷小红书了。
@@ -84,7 +88,7 @@ AI Agent 已经能帮你写代码、改文档、管项目——但你让它去�
 **已经装过了？更新也是一句话：**
 
 ```
-帮我更新 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/update.md
+帮我更新 Agent Reach：https://raw.githubusercontent.com/LeonidsChan/Agent-Reach/main/docs/update.md
 ```
 
 > ⭐ **Star 这个项目**，我们会持续追踪各平台的变化、接入新的渠道。你不用自己盯——平台封了我们修，有新渠道我们加。
@@ -115,6 +119,9 @@ AI Agent 已经能帮你写代码、改文档、管项目——但你让它去�
 | 📖 **Reddit** | —（没有零配置路径：匿名接口已被封） | 搜索 + 读帖子和评论 | 桌面装 OpenCLI 用浏览器登录态；或 rdt-cli + Cookie |
 | 📘 **Facebook** | — | 搜索、主页、Feed、群组列表 | 桌面装 OpenCLI（复用 Chrome 登录态） |
 | 📷 **Instagram** | — | 用户搜索、Profile、用户最近帖子、Explore | 桌面装 OpenCLI（复用 Chrome 登录态） |
+| 💬 **微信公众号** | 文章关键词搜索、摘要、发布时间 | 正文下载为 Markdown | 桌面装 OpenCLI（搜索免登录） |
+| 🎵 **抖音** | — | 视频搜索、作者作品、热门评论 | 桌面装 OpenCLI（复用 Chrome 登录态） |
+| 💡 **知乎** | Yahoo 站点限定搜索 | 站内搜索、问题/回答/文章、热榜 | OpenCLI；基础搜索免登录，完整能力复用 Chrome 登录态 |
 | 📕 **小红书** | — | 搜索、阅读、评论 | OpenCLI 只用用户已有 Chrome 会话；MCP/存量工具用 Cookie-Editor |
 | 💼 **LinkedIn** | Jina Reader 读公开页面 | Profile 详情、公司页面、职位搜索 | 告诉 Agent「帮我配 LinkedIn」 |
 | 💻 **V2EX** | 热门帖子、节点帖子、帖子详情+回复、用户信息 | — | 无需配置 |
@@ -147,19 +154,19 @@ AI Agent 已经能帮你写代码、改文档、管项目——但你让它去�
 复制这句话给你的 AI Agent（Claude Code、OpenClaw、Cursor 等）：
 
 ```
-帮我安装 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/install.md
+帮我安装 Agent Reach：https://raw.githubusercontent.com/LeonidsChan/Agent-Reach/main/docs/install.md
 ```
 
 就这一步。Agent 会自己完成剩下的所有事情。
 
 > 🔄 **已安装过？** 更新也是一句话：
 > ```
-> 帮我更新 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/update.md
+> 帮我更新 Agent Reach：https://raw.githubusercontent.com/LeonidsChan/Agent-Reach/main/docs/update.md
 > ```
 
 > 🛡️ **默认安全：** `agent-reach install` 默认只检查环境，不会自动装系统包或写入配置：
 > ```
-> 帮我安全检查并安装 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/install.md
+> 帮我安全检查并安装 Agent Reach：https://raw.githubusercontent.com/LeonidsChan/Agent-Reach/main/docs/install.md
 > ```
 > 只有在你明确允许修改系统后，才使用 `agent-reach install --system`。
 
@@ -335,7 +342,7 @@ Builder 也欢迎备注：`Builder + 你在做什么`
   <img src="docs/wechat-group-qr.jpg" width="280" alt="WeChat QR">
 </p>
 
-> Bug 反馈和功能请求请用 [GitHub Issues](https://github.com/Panniantong/Agent-Reach/issues)，更容易跟踪。
+> Bug 反馈和功能请求请用 [GitHub Issues](https://github.com/LeonidsChan/Agent-Reach/issues)，更容易跟踪。
 
 ## License
 
@@ -349,4 +356,4 @@ Builder 也欢迎备注：`Builder + 你在做什么`
 
 ## Star History
 
-<a href="https://www.star-history.com/?type=date&repos=Panniantong%2FAgent-Reach"><picture><source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=Panniantong/Agent-Reach&type=date&theme=dark&legend=top-left&sealed_token=K3_u-LJQTVURYu-38Tqa_VWJOSqMf_HbAw-QKSdGwEq6seqznugdIpXdSeztEdOutT40IBXwVxTmg8wS_OSygb5UWf1x8e-Fai6aygrjq6QH8vU09EcqQCN7atp-76HmxX-j9fnZ9NiSrLDNzK98TnXBFJ_Wb_y80I0nWr3O8DdGnLXFhAJgoNK3Jz8D" /><source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=Panniantong/Agent-Reach&type=date&legend=top-left&sealed_token=P2746KOq7grpS8Q-nrqEzci1-Z0-dOw-M3KEqju-l3TyF24NMyRDR7TnxdReJWlXyomoT4mjjqC28-2-c2G6CnzmS1hgYdEDiGPmLkmEqKP5tgjORXshdrUFxoSxTqmIKEMFFmGZUX1v3ec-q_XMyftTVWzluiQH7CvKoZ1uDKU3PJN05mO22u7qlLeG" /><img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Panniantong/Agent-Reach&type=date&legend=top-left&sealed_token=P2746KOq7grpS8Q-nrqEzci1-Z0-dOw-M3KEqju-l3TyF24NMyRDR7TnxdReJWlXyomoT4mjjqC28-2-c2G6CnzmS1hgYdEDiGPmLkmEqKP5tgjORXshdrUFxoSxTqmIKEMFFmGZUX1v3ec-q_XMyftTVWzluiQH7CvKoZ1uDKU3PJN05mO22u7qlLeG" /></picture></a>
+<a href="https://www.star-history.com/?type=date&repos=Panniantong%2FAgent-Reach"><picture><source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=LeonidsChan/Agent-Reach&type=date&theme=dark&legend=top-left&sealed_token=K3_u-LJQTVURYu-38Tqa_VWJOSqMf_HbAw-QKSdGwEq6seqznugdIpXdSeztEdOutT40IBXwVxTmg8wS_OSygb5UWf1x8e-Fai6aygrjq6QH8vU09EcqQCN7atp-76HmxX-j9fnZ9NiSrLDNzK98TnXBFJ_Wb_y80I0nWr3O8DdGnLXFhAJgoNK3Jz8D" /><source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=LeonidsChan/Agent-Reach&type=date&legend=top-left&sealed_token=P2746KOq7grpS8Q-nrqEzci1-Z0-dOw-M3KEqju-l3TyF24NMyRDR7TnxdReJWlXyomoT4mjjqC28-2-c2G6CnzmS1hgYdEDiGPmLkmEqKP5tgjORXshdrUFxoSxTqmIKEMFFmGZUX1v3ec-q_XMyftTVWzluiQH7CvKoZ1uDKU3PJN05mO22u7qlLeG" /><img alt="Star History Chart" src="https://api.star-history.com/chart?repos=LeonidsChan/Agent-Reach&type=date&legend=top-left&sealed_token=P2746KOq7grpS8Q-nrqEzci1-Z0-dOw-M3KEqju-l3TyF24NMyRDR7TnxdReJWlXyomoT4mjjqC28-2-c2G6CnzmS1hgYdEDiGPmLkmEqKP5tgjORXshdrUFxoSxTqmIKEMFFmGZUX1v3ec-q_XMyftTVWzluiQH7CvKoZ1uDKU3PJN05mO22u7qlLeG" /></picture></a>

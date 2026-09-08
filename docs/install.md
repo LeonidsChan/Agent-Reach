@@ -5,12 +5,12 @@
 Copy this to your AI Agent:
 
 ```
-帮我安装 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/install.md
+帮我安装 Agent Reach：https://raw.githubusercontent.com/LeonidsChan/Agent-Reach/main/docs/install.md
 ```
 
 > 🛡️ **Safe by default:** `agent-reach install` only checks the machine and lists missing dependencies:
 > ```
-> 帮我安全检查并安装 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/install.md
+> 帮我安全检查并安装 Agent Reach：https://raw.githubusercontent.com/LeonidsChan/Agent-Reach/main/docs/install.md
 > ```
 > Only use `--system` after the user explicitly approves system-level installs and configuration writes.
 
@@ -50,7 +50,7 @@ All Agent Reach files go in dedicated directories — **never in the agent works
 
 ```bash
 # 推荐：pipx（最省心）
-pipx install https://github.com/Panniantong/agent-reach/archive/main.zip
+pipx install https://github.com/LeonidsChan/Agent-Reach/archive/main.zip
 agent-reach install --env=auto               # Read-only check (default)
 # After the user explicitly approves system changes:
 agent-reach install --env=auto --system
@@ -59,7 +59,7 @@ agent-reach install --env=auto --system
 # 用虚拟环境安装：
 python3 -m venv ~/.agent-reach-venv
 source ~/.agent-reach-venv/bin/activate
-pip install https://github.com/Panniantong/agent-reach/archive/main.zip
+pip install https://github.com/LeonidsChan/Agent-Reach/archive/main.zip
 agent-reach install --env=auto               # Read-only check (default)
 # After the user explicitly approves system changes:
 agent-reach install --env=auto --system
@@ -74,7 +74,7 @@ agent-reach install --env=auto --system
 > ```powershell
 > py -3 -m venv $env:USERPROFILE\.agent-reach-venv
 > $env:USERPROFILE\.agent-reach-venv\Scripts\Activate.ps1
-> python -m pip install https://github.com/Panniantong/agent-reach/archive/main.zip
+> python -m pip install https://github.com/LeonidsChan/Agent-Reach/archive/main.zip
 > agent-reach install --env=auto
 > ```
 
@@ -102,7 +102,7 @@ After installing the basics, **ask the user** which additional channels they nee
 >
 > 还有这些可选渠道，你需要哪些？
 >
-> - 🌟 **OpenCLI**（桌面推荐）— 一次安装即可提供 Reddit/Facebook/Instagram/B站字幕/Twitter 备选，并作为小红书桌面后端；小红书只使用用户已有且明确控制的 Chrome 会话
+> - 🌟 **OpenCLI**（桌面推荐）— 一次安装即可提供 Reddit/Facebook/Instagram/B站字幕/Twitter/知乎，并作为小红书桌面后端；知乎另有免登录搜索回退
 > - 🐦 **Twitter/X** — 搜推文、看时间线（需要登录 Cookie）
 > - 📈 **雪球** — 股票行情、热门帖子（需要登录 Cookie）
 > - 🎙️ **小宇宙播客** — 音频转文字（需要免费 Groq Key）
@@ -110,6 +110,9 @@ After installing the basics, **ask the user** which additional channels they nee
 > - 📖 **Reddit** — 搜索和阅读帖子（必须登录态：桌面 OpenCLI 或 rdt-cli + Cookie）
 > - 📘 **Facebook** — 搜索、主页、Feed、群组列表（桌面走 OpenCLI，复用 Chrome 登录态）
 > - 📷 **Instagram** — 用户搜索、Profile、用户最近帖子、Explore（桌面走 OpenCLI，复用 Chrome 登录态）
+> - 💬 **微信公众号** — 文章搜索、摘要和正文提取（搜索免登录）
+> - 🎵 **抖音** — 视频搜索和作者作品（桌面走 OpenCLI，复用 Chrome 登录态）
+> - 💡 **知乎** — 基础搜索免登录；站内搜索、问题、回答、文章和热榜复用 Chrome 登录态
 > - 📺 **B站完整版** — 热门、排行、搜索、视频详情（bili-cli，无需登录）
 > - 💼 **LinkedIn** — Profile、职位搜索
 >
@@ -119,11 +122,11 @@ Based on the user's choice, run:
 
 ```bash
 agent-reach install --env=auto --system --channels=opencli,xiaohongshu   # Desktop user chose XHS
-agent-reach install --env=auto --system --channels=facebook,instagram    # Desktop Meta channels
+agent-reach install --env=auto --system --channels=facebook,instagram,zhihu # Desktop OpenCLI channels
 agent-reach install --env=auto --system --channels=all                   # User approved everything
 ```
 
-Supported channel names: `opencli`, `twitter`, `xiaoyuzhou`, `xueqiu`, `xiaohongshu`, `reddit`, `facebook`, `instagram`, `bilibili`, `linkedin`, `all`
+Supported channel names: `opencli`, `twitter`, `xiaoyuzhou`, `xueqiu`, `xiaohongshu`, `reddit`, `facebook`, `instagram`, `bilibili`, `douyin`, `wechat`, `zhihu`, `linkedin`, `all`
 
 ### Step 3: Fix what's broken
 
@@ -330,7 +333,7 @@ If the user agrees, create a **cron job** (daily, `sessionTarget: "isolated"`, `
 运行 agent-reach watch 命令。
 如果输出包含"全部正常"，不需要通知用户，静默结束。
 如果输出包含问题（❌ ⚠️）或新版本（🆕），把完整报告发给用户，并建议修复方案。
-如果有新版本可用，问用户是否要升级（把这句话发给用户的 Agent 即可完整更新：帮我更新 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/update.md）。
+如果有新版本可用，问用户是否要升级（把这句话发给用户的 Agent 即可完整更新：帮我更新 Agent Reach：https://raw.githubusercontent.com/LeonidsChan/Agent-Reach/main/docs/update.md）。
 ```
 
 If the user wants a different agent to handle it, let them choose.
