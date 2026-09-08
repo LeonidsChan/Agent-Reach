@@ -6,12 +6,15 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [1.5.0+wechat.douyin] - 2026-07-02
+## [1.5.0+wechat.douyin.zhihu] - 2026-09-08
 
 ### New Channels / 新增渠道
 
 - 微信公众号文章：通过 OpenCLI `weixin` adapter 搜索文章并下载 Markdown 正文。
 - 抖音：通过 OpenCLI `douyin` adapter 搜索视频和读取作者作品。
+- 知乎：登录后使用 OpenCLI 原生站内搜索和内容读取；未登录时使用 Yahoo
+  `site:zhihu.com` 公共搜索，保证基础搜索能力始终可用。
+- 合并本机既有的 Exa + Tavily 双引擎、微信正文 Camoufox 以及按站点代理回退说明。
 - doctor、install channel 路由及中英文 Agent skill 已同步注册。
 
 ## [1.3.1] - 2026-03-27

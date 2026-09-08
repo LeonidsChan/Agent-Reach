@@ -1,6 +1,6 @@
 # 社交媒体 & 社区
 
-小红书、Twitter/X、B站、微信公众号、抖音、V2EX、Reddit、Facebook、Instagram。
+小红书、Twitter/X、B站、微信公众号、抖音、知乎、V2EX、Reddit、Facebook、Instagram。
 
 ## 小红书 / XiaoHongShu（多后端）
 
@@ -406,3 +406,30 @@ opencli douyin whoami -f yaml
 ```
 
 > 只把 `search` / `user-videos` 当作读取能力。发布、删除、更新等写操作不属于 Agent Reach 的默认只读范围，必须另行获得用户明确授权。
+
+## 知乎（OpenCLI 原生 + 公开搜索回退）
+
+知乎提供两条读取路径。优先尝试原生适配器；若返回 `AUTH_REQUIRED`，立即切换
+Yahoo 的站点限定搜索，基础搜索无需知乎登录。
+
+```bash
+# 原生站内搜索（需要 Chrome 中已有知乎登录态）
+opencli zhihu search "关键词" --limit 10 -f yaml
+
+# 无登录回退：结果仍限定为知乎问题和专栏文章
+opencli yahoo search "site:zhihu.com 关键词" --limit 10 -f yaml
+```
+
+登录后还可读取问题、回答、文章和热榜：
+
+```bash
+opencli zhihu question QUESTION_ID --limit 10 -f yaml
+opencli zhihu answer-detail ANSWER_ID -f yaml
+opencli zhihu download --url "https://zhuanlan.zhihu.com/p/ARTICLE_ID" -f yaml
+opencli zhihu hot --limit 20 -f yaml
+opencli zhihu user USERNAME -f yaml
+```
+
+> `agent-reach doctor --json` 的 `active_backend` 默认报告公开回退，因为 Doctor
+> 不读取浏览器 Cookie，也不把扩展连通误报成已登录。遇到验证码或风控时降低频率；
+> 公开搜索只承诺搜索引擎已索引内容，时效性和结果完整度低于登录后的原生搜索。

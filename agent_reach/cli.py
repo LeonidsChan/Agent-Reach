@@ -93,7 +93,7 @@ def main():
     p_install.add_argument("--channels", default="",
                            help="Comma-separated optional channels to install "
                                 "(twitter,xiaoyuzhou,xueqiu,xiaohongshu,"
-                                "reddit,facebook,instagram,bilibili,douyin,wechat,linkedin,all)")
+                                "reddit,facebook,instagram,bilibili,douyin,wechat,zhihu,linkedin,all)")
 
     # ── configure ──
     p_conf = sub.add_parser("configure", help="Set a config value or auto-extract from browser")
@@ -271,6 +271,7 @@ def _cmd_install(args):
         "instagram":   _install_opencli_deps,
         "douyin":      _install_opencli_deps,
         "wechat":      _install_opencli_deps,
+        "zhihu":       _install_opencli_deps,
         "bilibili":    _install_bili_deps,
         "opencli":     _install_opencli_deps,  # cross-channel backend, desktop only
         # xueqiu: cookie-only, no install step
@@ -319,7 +320,7 @@ def _cmd_install(args):
         tools_dir = os.path.expanduser("~/.agent-reach/tools")
         os.makedirs(tools_dir, exist_ok=True)
 
-    OPENCLI_ONLY_CHANNELS = {"opencli", "facebook", "instagram", "douyin", "wechat"}
+    OPENCLI_ONLY_CHANNELS = {"opencli", "facebook", "instagram", "douyin", "wechat", "zhihu"}
     COOKIE_CHANNELS = {"twitter", "xueqiu", "bilibili", "xiaohongshu"}
 
     # Auto-detect environment
@@ -457,7 +458,7 @@ def _cmd_install(args):
                 # First install — hint about optional channels
                 print()
                 print("More channels available! Use --channels to install:")
-                print("   agent-reach install --system --channels=twitter,xiaohongshu,reddit,facebook,instagram,douyin,wechat,...")
+                print("   agent-reach install --system --channels=twitter,xiaohongshu,reddit,facebook,instagram,douyin,wechat,zhihu,...")
                 print("   agent-reach install --system --channels=all  (install everything)")
 
             # Star reminder
@@ -2215,7 +2216,8 @@ def _is_newer_version(remote: str, local: str) -> bool:
     """
     def parse(v):
         try:
-            return tuple(int(x) for x in v.strip().split("."))
+            release = v.strip().split("+", 1)[0]
+            return tuple(int(x) for x in release.split("."))
         except ValueError:
             return None
 

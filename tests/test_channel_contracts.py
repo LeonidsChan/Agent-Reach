@@ -174,6 +174,7 @@ def test_channel_can_handle_contract():
         "bilibili": "https://www.bilibili.com/video/BV1xx411",
         "douyin": "https://www.douyin.com/video/123",
         "wechat_official": "https://mp.weixin.qq.com/s/abc123",
+        "zhihu": "https://www.zhihu.com/question/123",
         "xiaohongshu": "https://www.xiaohongshu.com/explore/123",
         "linkedin": "https://www.linkedin.com/in/test",
         "rss": "https://example.com/feed.xml",

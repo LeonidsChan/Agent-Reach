@@ -1,6 +1,6 @@
 [project]
 name = "agent-reach"
-version = "1.5.0+wechat.douyin"
+version = "1.5.0+wechat.douyin.zhihu"
 description = "Give your AI Agent eyes to see the entire internet. Search + Read 10+ platforms."
 readme = "README.md"
 license = {text = "MIT"}
@@ -10,7 +10,7 @@ keywords = [
     "ai-agent", "llm-tools", "agent-infrastructure", "mcp",
     "web-reader", "web-scraper", "search",
     "twitter-scraper", "reddit-scraper", "youtube-transcript",
-    "bilibili", "xiaohongshu", "wechat", "douyin",
+    "bilibili", "xiaohongshu", "wechat", "douyin", "zhihu",
     "ai-search", "cli", "automation",
     "claude-code", "cursor", "openai",
     "free-api", "no-api-key",

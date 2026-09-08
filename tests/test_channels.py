@@ -18,6 +18,7 @@ from agent_reach.channels.v2ex import V2EXChannel
 from agent_reach.channels.wechat import WeChatOfficialChannel
 from agent_reach.channels.xiaohongshu import XiaoHongShuChannel
 from agent_reach.channels.xueqiu import XueqiuChannel
+from agent_reach.channels.zhihu import ZhihuChannel
 
 
 class TestChannelRegistry:
@@ -39,10 +40,49 @@ class TestChannelRegistry:
         assert "instagram" in names
         assert "douyin" in names
         assert "wechat_official" in names
+        assert "zhihu" in names
         assert "v2ex" in names
 
 
 class TestOpenCLISiteChannels:
+    def test_zhihu_can_handle_common_urls(self):
+        ch = ZhihuChannel()
+        assert ch.can_handle("https://www.zhihu.com/question/123")
+        assert ch.can_handle("https://zhuanlan.zhihu.com/p/456")
+        assert not ch.can_handle("https://zhihu.com.evil.example/question/123")
+
+    def test_zhihu_public_fallback_is_usable_when_opencli_ready(self, monkeypatch):
+        monkeypatch.setattr(
+            "agent_reach.backends.opencli_status",
+            lambda: OpenCLIStatus(
+                installed=True,
+                daemon_running=True,
+                extension_connected=True,
+                version="1.8.5",
+            ),
+        )
+        channel = ZhihuChannel()
+        status, message = channel.check()
+        assert status == "ok"
+        assert channel.active_backend == "OpenCLI Yahoo 站点搜索（公开）"
+        assert "无需知乎登录" in message
+
+    def test_zhihu_requires_supported_opencli_version(self, monkeypatch):
+        monkeypatch.setattr(
+            "agent_reach.backends.opencli_status",
+            lambda: OpenCLIStatus(
+                installed=True,
+                daemon_running=True,
+                extension_connected=True,
+                version="1.8.4",
+            ),
+        )
+        channel = ZhihuChannel()
+        status, message = channel.check()
+        assert status == "warn"
+        assert channel.active_backend is None
+        assert "升级" in message
+
     def test_localized_channels_handle_expected_urls(self):
         assert DouyinChannel().can_handle("https://www.douyin.com/video/123")
         assert DouyinChannel().can_handle("https://v.douyin.com/abc")

@@ -10,11 +10,15 @@ import pytest
 import requests
 
 import agent_reach.cli as cli
+from agent_reach import __version__
 from agent_reach.cli import main
 from agent_reach.config import Config
 
 
 class TestCLI:
+    def test_localized_version(self):
+        assert __version__ == "1.5.0+wechat.douyin.zhihu"
+
     def test_version(self, capsys):
         with pytest.raises(SystemExit) as exc_info:
             with patch("sys.argv", ["agent-reach", "version"]):
@@ -293,7 +297,7 @@ class TestCLI:
         assert calls == ["opencli"]
         assert "Installation complete" in capsys.readouterr().out
 
-    def test_install_douyin_weixin_alias_routes_to_opencli_once(self, monkeypatch, capsys):
+    def test_install_douyin_weixin_zhihu_routes_to_opencli_once(self, monkeypatch, capsys):
         calls = []
 
         monkeypatch.setattr(cli, "_detect_environment", lambda: "local")
@@ -309,8 +313,9 @@ class TestCLI:
                 env="auto",
                 proxy="",
                 safe=False,
+                system=True,
                 dry_run=False,
-                channels="douyin,weixin,wechat",
+                channels="douyin,weixin,wechat,zhihu",
             )
         )
 
@@ -438,9 +443,9 @@ class TestVersionCompare:
 
 class TestWatchVersionCompare:
     def test_local_build_metadata_does_not_prompt_downgrade(self):
-        assert not cli._is_newer_version("1.4.2", "1.5.0+wechat.douyin")
-        assert not cli._is_newer_version("1.5.0", "1.5.0+wechat.douyin")
-        assert cli._is_newer_version("1.6.0", "1.5.0+wechat.douyin")
+        assert not cli._is_newer_version("1.4.2", "1.5.0+wechat.douyin.zhihu")
+        assert not cli._is_newer_version("1.5.0", "1.5.0+wechat.douyin.zhihu")
+        assert cli._is_newer_version("1.6.0", "1.5.0+wechat.douyin.zhihu")
 
     def test_watch_does_not_prompt_downgrade(self, monkeypatch, capsys):
         """watch 与 check-update 同语义:本地领先远端 release 时不提示更新。"""
