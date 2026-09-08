@@ -1,6 +1,6 @@
 # 社交媒体 & 社区
 
-小红书、Twitter/X、B站、V2EX、Reddit、Facebook、Instagram。
+小红书、Twitter/X、B站、微信公众号、抖音、V2EX、Reddit、Facebook、Instagram。
 
 ## 小红书 / XiaoHongShu（多后端）
 
@@ -157,12 +157,12 @@ opencli bilibili subtitle BVxxx
 
 ## V2EX (公开 API)
 
-无需认证，直接调用公开 API。
-
-### 热门主题
+无需认证，直接调用公开 API。v2ex.com 部分网络直连被墙，
+**直连失败时自动经本地代理重试**（代理发现见 references/web.md 的 arcurl）：
 
 ```bash
-curl -s "https://www.v2ex.com/api/topics/hot.json" -H "User-Agent: agent-reach/1.0"
+arcurl() { curl -s -m 15 "$@" || curl -s -m 20 -x http://127.0.0.1:7890 "$@"; }
+arcurl "https://www.v2ex.com/api/topics/hot.json" -H "User-Agent: agent-reach/1.0"
 ```
 
 ### 节点主题
@@ -299,3 +299,110 @@ opencli instagram saved --limit 20 -f yaml
 ```
 
 > 要求 Chrome 打开且装了 OpenCLI 扩展，并已登录 instagram.com。`instagram search` 是用户搜索；读帖子需要先确定 username，再用 `instagram user USERNAME`。若出现 429 / login required，先让用户在 Chrome 里重新登录并降低频率。
+
+## 微信公众号文章（OpenCLI + miku_ai + Camoufox）
+
+将“搜索摘要”和“读取完整正文”分开处理：
+
+| 目标 | 首选后端 | 说明 |
+|---|---|---|
+| 搜标题/日期/摘要 | OpenCLI | 快速、免登录，但结果 URL 常是搜狗中转链接 |
+| 获取真实原文 URL | `miku_ai` | 返回 `mp.weixin.qq.com` URL、公众号名和日期 |
+| 读取完整正文 | `wechat-article-for-ai` / Camoufox | 绕过微信反爬并输出 Markdown |
+
+### 1. 快速搜索摘要
+
+```bash
+opencli weixin search "关键词" --page 1 --limit 10 -f yaml
+```
+
+如果 URL 是 `https://weixin.sogou.com/link?...`，**不要**直接传给
+`opencli weixin download`。该下载器只接受 `mp.weixin.qq.com`；搜狗中转常跳到
+`/antispider/`，会表现为 `invalid URL`，这不代表微信公众号无法搜索。
+
+### 2. 搜索真实微信原文 URL
+
+本机固定使用独立环境：
+
+```bash
+WECHAT_TOOL="$HOME/.agent-reach/tools/wechat-article-for-ai"
+"$WECHAT_TOOL/.venv/bin/python" - <<'PY'
+import asyncio
+from miku_ai import get_wexin_article
+
+async def main():
+    for article in await get_wexin_article("关键词", 5):
+        print(article["title"], article["source"], article["url"], sep="\t")
+
+asyncio.run(main())
+PY
+```
+
+注意上游函数名确实拼作 `get_wexin_article`。搜索偶尔因代理频控返回空列表；降低频率，
+换同义关键词后重试，不要并发轰炸。
+
+### 3. 用 Camoufox 抓完整正文
+
+```bash
+WECHAT_TOOL="$HOME/.agent-reach/tools/wechat-article-for-ai"
+cd "$WECHAT_TOOL"
+"$WECHAT_TOOL/.venv/bin/python" main.py \
+  "https://mp.weixin.qq.com/s/ARTICLE_OR_SIGNED_URL" \
+  -o /tmp/weixin-articles --no-images -v
+```
+
+成功标准：日志出现 `Title`、`Author` 和 `Saved`，输出 Markdown 应包含正文段落，
+不能只有搜索摘要或验证页。需要图片时去掉 `--no-images`。
+
+### 安装 / 修复完整正文链路
+
+目录不存在或 `miku_ai` 无法导入时：
+
+```bash
+mkdir -p "$HOME/.agent-reach/tools"
+git clone https://github.com/bzd6661/wechat-article-for-ai.git \
+  "$HOME/.agent-reach/tools/wechat-article-for-ai"
+python3 -m venv "$HOME/.agent-reach/tools/wechat-article-for-ai/.venv"
+"$HOME/.agent-reach/tools/wechat-article-for-ai/.venv/bin/pip" install \
+  -r "$HOME/.agent-reach/tools/wechat-article-for-ai/requirements.txt" \
+  miku-ai 'playwright==1.60.0'
+```
+
+首次运行会自动下载 Camoufox 浏览器。若访问 GitHub Releases API 报
+`403 rate limit exceeded`，优先稍后重试；若 `gh auth status` 已登录，可用 `gh release
+download` 下载对应 macOS/Linux 架构的 Camoufox release asset 到
+`~/Library/Caches/camoufox`（macOS）或平台缓存目录。
+
+### 已验证故障表（2026-07-03）
+
+| 症状 | 原因 | 处理 |
+|---|---|---|
+| OpenCLI 能搜，download 报 `invalid URL` | 传入搜狗中转 URL | 用 `miku_ai` 获取真实 `mp.weixin.qq.com` URL |
+| 跳到 `weixin.sogou.com/antispider` | 搜狗中转反爬 | 不再解析中转，改走 `miku_ai` |
+| `ModuleNotFoundError: miku_ai` | 完整正文工具链未安装 | 按上方独立 venv 安装 |
+| Camoufox fetch 报 GitHub API 403 | 匿名 Releases API 限流 | 稍后重试或用已认证 `gh` 下载 release asset |
+| `Browser.setDefaultViewport` / `isMobile` schema 错误 | Playwright 1.61 与 Camoufox Juggler 不兼容 | 固定 `playwright==1.60.0`；见 daijro/camoufox#653 |
+| 微信验证/CAPTCHA | 微信风控 | 加 `--no-headless` 人工完成验证，再重试 |
+
+实测：上述链路成功抓取《量化CTA风格因子跟踪 · 库存指数上涨，期限结构因子筑底回升》，
+生成约 5,348 字 Markdown，并正确解析标题、作者、日期与 14 张图片。
+
+> `weixin search` 搜的是公众号文章，不等同于微信联系人、群聊或聊天记录搜索。
+
+## 抖音（OpenCLI，浏览器会话）
+
+抖音搜索走 OpenCLI，复用 Chrome 会话。先跑 doctor；若搜索超时或提示安全状态，先在 Chrome 登录 `douyin.com` 并完成验证码/安全验证。
+
+```bash
+# 关键词搜索视频
+opencli douyin search "关键词" --limit 10 -f yaml
+
+# 指定作者视频（sec_uid 来自作者主页 URL）
+opencli douyin user-videos SEC_UID --limit 20 --with_comments true -f yaml
+
+# 登录及状态检查
+opencli douyin login -f yaml
+opencli douyin whoami -f yaml
+```
+
+> 只把 `search` / `user-videos` 当作读取能力。发布、删除、更新等写操作不属于 Agent Reach 的默认只读范围，必须另行获得用户明确授权。

@@ -17,6 +17,7 @@ class OpenCLISiteChannel(Channel):
     domains: tuple[str, ...] = ()
     usage: str = ""
     login_hint: str = ""
+    login_required: bool = True
 
     backends = ["OpenCLI"]
     tier = 1
@@ -39,6 +40,12 @@ class OpenCLISiteChannel(Channel):
             return "error", st.hint
 
         if st.ready:
+            if not self.login_required:
+                self.active_backend = "OpenCLI"
+                return "ok", (
+                    f"OpenCLI 可用（搜索免登录）。用法：{self.usage}。"
+                    f"需访问账号后台时再在 Chrome 里登录 {self.login_hint}"
+                )
             return "warn", (
                 f"OpenCLI 桥接已连接，但 {self.description} 的登录态和实际命令"
                 "未实时验证；Doctor 不执行平台命令，因此当前不标记为可用。"

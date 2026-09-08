@@ -4,15 +4,21 @@
 
 ## 通用网页 (Jina Reader)
 
+`r.jina.ai` 在部分网络下直连被墙。**直连优先，失败自动经本地代理重试**：
+
 ```bash
+# arcurl: 直连 15s 超时后, 自动走本地代理 (端口按本机实际, 可用 scutil --proxy 查 HTTPSProxy)
+arcurl() { curl -s -m 15 "$@" || curl -s -m 20 -x http://127.0.0.1:7890 "$@"; }
+
 # 读取任意网页内容
-curl -s "https://r.jina.ai/URL"
+arcurl "https://r.jina.ai/URL"
 
 # 示例
-curl -s "https://r.jina.ai/https://example.com/article"
+arcurl "https://r.jina.ai/https://example.com/article"
 ```
 
-**适用场景**: 大多数网页可以直接用 Jina Reader 读取。
+**适用场景**: 大多数网页可以直接用 Jina Reader 读取。不要全局 export
+`https_proxy`——会把 tushare/westock 等国内数据源也路由进代理。
 
 ## Web Reader (MCP)
 

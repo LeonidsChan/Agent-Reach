@@ -93,7 +93,7 @@ def main():
     p_install.add_argument("--channels", default="",
                            help="Comma-separated optional channels to install "
                                 "(twitter,xiaoyuzhou,xueqiu,xiaohongshu,"
-                                "reddit,facebook,instagram,bilibili,linkedin,all)")
+                                "reddit,facebook,instagram,bilibili,douyin,wechat,linkedin,all)")
 
     # ── configure ──
     p_conf = sub.add_parser("configure", help="Set a config value or auto-extract from browser")
@@ -269,6 +269,8 @@ def _cmd_install(args):
         "reddit":      _install_reddit_deps,
         "facebook":    _install_opencli_deps,
         "instagram":   _install_opencli_deps,
+        "douyin":      _install_opencli_deps,
+        "wechat":      _install_opencli_deps,
         "bilibili":    _install_bili_deps,
         "opencli":     _install_opencli_deps,  # cross-channel backend, desktop only
         # xueqiu: cookie-only, no install step
@@ -279,6 +281,10 @@ def _cmd_install(args):
         channel.strip().lower()
         for channel in args.channels.split(",")
         if channel.strip()
+    ]
+    raw_channels = [
+        "wechat" if channel in {"weixin", "wechat-official"} else channel
+        for channel in raw_channels
     ]
     unknown_channels = set(raw_channels) - supported_channels - {"all"}
     if unknown_channels:
@@ -313,7 +319,7 @@ def _cmd_install(args):
         tools_dir = os.path.expanduser("~/.agent-reach/tools")
         os.makedirs(tools_dir, exist_ok=True)
 
-    OPENCLI_ONLY_CHANNELS = {"opencli", "facebook", "instagram"}
+    OPENCLI_ONLY_CHANNELS = {"opencli", "facebook", "instagram", "douyin", "wechat"}
     COOKIE_CHANNELS = {"twitter", "xueqiu", "bilibili", "xiaohongshu"}
 
     # Auto-detect environment
@@ -451,7 +457,7 @@ def _cmd_install(args):
                 # First install — hint about optional channels
                 print()
                 print("More channels available! Use --channels to install:")
-                print("   agent-reach install --system --channels=twitter,xiaohongshu,reddit,facebook,instagram,...")
+                print("   agent-reach install --system --channels=twitter,xiaohongshu,reddit,facebook,instagram,douyin,wechat,...")
                 print("   agent-reach install --system --channels=all  (install everything)")
 
             # Star reminder

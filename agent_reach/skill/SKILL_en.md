@@ -6,10 +6,10 @@ description: >
   web for X", "see what people say about X", "look this up".
 
   Also MUST USE when user mentions any platform or shares any URL/link:
-  Twitter/X, Reddit, Facebook, Instagram, YouTube, GitHub, Bilibili, XiaoHongShu,
+  Twitter/X, Reddit, Facebook, Instagram, WeChat Official Accounts, Douyin, YouTube, GitHub, Bilibili, XiaoHongShu,
   Xiaoyuzhou Podcast, LinkedIn/jobs/recruiting, V2EX, Xueqiu (stocks), RSS.
 
-  15 platforms, multi-backend routing (OpenCLI / per-platform CLIs / APIs).
+  17 platforms, multi-backend routing (OpenCLI / per-platform CLIs / APIs).
   Zero config for 6 channels. Run `agent-reach doctor --json` to see which
   backend serves each platform right now.
 
@@ -22,13 +22,13 @@ metadata:
 
 # Agent Reach — internet capability router
 
-15 platforms, multiple backends each. **When this skill exists, use it for
+17 platforms, multiple backends each. **When this skill exists, use it for
 these platforms — do not invent your own approach.**
 
 ## Standing rules (apply for the whole session)
 
 1. **Health-check before acting**: for multi-backend/login-backed platforms (XiaoHongShu /
-   Reddit / Bilibili / Twitter / Facebook / Instagram), run `agent-reach doctor --json` first.
+   Reddit / Bilibili / Twitter / Facebook / Instagram / WeChat / Douyin), run `agent-reach doctor --json` first.
    Use a populated `active_backend`; `active_backend: null` means Doctor deliberately skipped a
    live probe to avoid browser-cookie reads or remote writes, not that no backend exists. Only when
    the user's task requires that platform, run the reference's read-only command to verify it.
@@ -51,7 +51,7 @@ these platforms — do not invent your own approach.**
 | User intent | Category | Details |
 |---------|------|---------|
 | Web / code search | search | [references/search.md](references/search.md) |
-| XiaoHongShu / Twitter / Bilibili / V2EX / Reddit / Facebook / Instagram | social | [references/social.md](references/social.md) |
+| XiaoHongShu / Twitter / Bilibili / WeChat / Douyin / V2EX / Reddit / Facebook / Instagram | social | [references/social.md](references/social.md) |
 | Jobs / LinkedIn | career | [references/career.md](references/career.md) |
 | GitHub / code | dev | [references/dev.md](references/dev.md) |
 | Web pages / articles / RSS | web | [references/web.md](references/web.md) |
@@ -109,6 +109,12 @@ opencli facebook search "query" -f yaml
 opencli facebook groups -f yaml
 opencli instagram search "query" -f yaml       # user search
 opencli instagram user USERNAME -f yaml        # recent posts from one user
+
+# WeChat Official Account article search (public)
+opencli weixin search "query" --limit 10 -f yaml
+
+# Douyin video search (may require Chrome login/security verification)
+opencli douyin search "query" --limit 10 -f yaml
 ```
 
 ## Environment check
@@ -137,7 +143,7 @@ common cases; references hold per-backend command groups, caveats, retry
 chains — note: reference docs are written in Chinese, commands are universal):
 
 - [Search](references/search.md) — Exa AI search
-- [Social](references/social.md) — XiaoHongShu, Twitter, Bilibili, V2EX, Reddit, Facebook, Instagram (multi-backend/login-backed groups)
+- [Social](references/social.md) — XiaoHongShu, Twitter, Bilibili, WeChat, Douyin, V2EX, Reddit, Facebook, Instagram (multi-backend/login-backed groups)
 - [Career](references/career.md) — LinkedIn
 - [Dev](references/dev.md) — GitHub CLI
 - [Web](references/web.md) — Jina Reader, RSS

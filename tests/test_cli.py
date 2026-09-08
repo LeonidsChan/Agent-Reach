@@ -293,6 +293,30 @@ class TestCLI:
         assert calls == ["opencli"]
         assert "Installation complete" in capsys.readouterr().out
 
+    def test_install_douyin_weixin_alias_routes_to_opencli_once(self, monkeypatch, capsys):
+        calls = []
+
+        monkeypatch.setattr(cli, "_detect_environment", lambda: "local")
+        monkeypatch.setattr(cli, "_install_system_deps", lambda: None)
+        monkeypatch.setattr(cli, "_install_mcporter", lambda: None)
+        monkeypatch.setattr(cli, "_install_opencli_deps", lambda: calls.append("opencli"))
+        monkeypatch.setattr(cli, "_install_skill", lambda: None)
+        monkeypatch.setattr("agent_reach.doctor.check_all", lambda config: {})
+        monkeypatch.setattr("agent_reach.doctor.format_report", lambda results: "report")
+
+        cli._cmd_install(
+            Namespace(
+                env="auto",
+                proxy="",
+                safe=False,
+                dry_run=False,
+                channels="douyin,weixin,wechat",
+            )
+        )
+
+        assert calls == ["opencli"]
+        assert "Installation complete" in capsys.readouterr().out
+
     def test_install_server_dry_run_skips_opencli_only_channels(self, monkeypatch, capsys):
         monkeypatch.setattr(cli, "_install_system_deps_dryrun", lambda: None)
 
@@ -413,6 +437,11 @@ class TestVersionCompare:
 
 
 class TestWatchVersionCompare:
+    def test_local_build_metadata_does_not_prompt_downgrade(self):
+        assert not cli._is_newer_version("1.4.2", "1.5.0+wechat.douyin")
+        assert not cli._is_newer_version("1.5.0", "1.5.0+wechat.douyin")
+        assert cli._is_newer_version("1.6.0", "1.5.0+wechat.douyin")
+
     def test_watch_does_not_prompt_downgrade(self, monkeypatch, capsys):
         """watch 与 check-update 同语义:本地领先远端 release 时不提示更新。"""
         class R:

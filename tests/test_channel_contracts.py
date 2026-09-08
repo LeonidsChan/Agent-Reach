@@ -172,6 +172,8 @@ def test_channel_can_handle_contract():
         "facebook": "https://www.facebook.com/zuck",
         "instagram": "https://www.instagram.com/openai/",
         "bilibili": "https://www.bilibili.com/video/BV1xx411",
+        "douyin": "https://www.douyin.com/video/123",
+        "wechat_official": "https://mp.weixin.qq.com/s/abc123",
         "xiaohongshu": "https://www.xiaohongshu.com/explore/123",
         "linkedin": "https://www.linkedin.com/in/test",
         "rss": "https://example.com/feed.xml",

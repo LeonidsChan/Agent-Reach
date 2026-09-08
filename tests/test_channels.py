@@ -11,9 +11,11 @@ import pytest
 from agent_reach.backends import OpenCLIStatus
 from agent_reach.channels import get_all_channels, get_channel
 from agent_reach.channels.bilibili import BilibiliChannel
+from agent_reach.channels.douyin import DouyinChannel
 from agent_reach.channels.facebook import FacebookChannel
 from agent_reach.channels.instagram import InstagramChannel
 from agent_reach.channels.v2ex import V2EXChannel
+from agent_reach.channels.wechat import WeChatOfficialChannel
 from agent_reach.channels.xiaohongshu import XiaoHongShuChannel
 from agent_reach.channels.xueqiu import XueqiuChannel
 
@@ -35,10 +37,33 @@ class TestChannelRegistry:
         assert "twitter" in names
         assert "facebook" in names
         assert "instagram" in names
+        assert "douyin" in names
+        assert "wechat_official" in names
         assert "v2ex" in names
 
 
 class TestOpenCLISiteChannels:
+    def test_localized_channels_handle_expected_urls(self):
+        assert DouyinChannel().can_handle("https://www.douyin.com/video/123")
+        assert DouyinChannel().can_handle("https://v.douyin.com/abc")
+        assert WeChatOfficialChannel().can_handle("https://mp.weixin.qq.com/s/abc")
+        assert not DouyinChannel().can_handle("https://douyin.com.evil.example/video/123")
+
+    def test_wechat_public_search_reports_ready(self, monkeypatch):
+        monkeypatch.setattr(
+            "agent_reach.backends.opencli_status",
+            lambda: OpenCLIStatus(
+                installed=True,
+                extension_connected=True,
+                version="1.8.5",
+            ),
+        )
+        channel = WeChatOfficialChannel()
+        status, message = channel.check()
+        assert status == "ok"
+        assert channel.active_backend == "OpenCLI"
+        assert "搜索免登录" in message
+
     def test_facebook_can_handle_common_urls(self):
         ch = FacebookChannel()
         assert ch.can_handle("https://www.facebook.com/zuck")
